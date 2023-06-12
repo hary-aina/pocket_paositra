@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/baniere"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/primary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/retour"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/primary"
+                android:paddingLeft="-80dp"
+                android:src="@drawable/left_32px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Mon compte"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/info_compte"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@color/secondary"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/type_compte"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="E-poketra"
+                    android:textColor="@color/primary"
+                    android:textSize="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/num_compte"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0099 0007 17896541237895 88"
+                    android:textColor="@color/white"
+                    android:layout_marginVertical="5dp"/>
+
+                <TextView
+                    android:id="@+id/telephone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+261 32 48 965 87"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="Statut"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/statut"
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="active"
+                        android:textAlignment="center"
+                        android:textColor="@color/success"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="Type de compte"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/type_compte2"
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="Particulier"
+                        android:textAlignment="center" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="Statut"
+                android:textStyle="bold"
+                android:textColor="@color/neutral"
+                android:layout_marginTop="25dp"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="Activation/desactivation"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"/>
+
+                    <Switch
+                        android:id="@+id/switch1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/lost_carte"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="j'ai perdue ma carte"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:background="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/next_32px"
+                        android:paddingRight="-65dp"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/delete_carte"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="160dp"
+                        android:layout_height="match_parent"
+                        android:text="supprimer ma carte"
+                        android:textColor="@color/danger"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:background="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/next_32px"
+                        android:paddingRight="-65dp"/>
+
+
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

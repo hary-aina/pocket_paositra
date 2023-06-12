@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".infoPerso">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/baniere"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/primary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/retour"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/primary"
+                android:paddingLeft="-80dp"
+                android:src="@drawable/left_32px" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Info perso"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Nom"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/nom"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="RAVAOARISOA"
+                    android:textAlignment="center"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Prenom"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/prenom"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Marcel"
+                    android:textAlignment="center" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Adresse"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/adresse"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Lot II A Bis Ivandry"
+                    android:textAlignment="center" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Telephone"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/telephone"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="+261 32 48 965 87"
+                    android:textAlignment="center" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Agence"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/agence"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:text="Antaninarenina"
+                    android:textAlignment="center" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <View
+            android:layout_width="350dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="100dp"
+            android:background="@color/neutral" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pour toutes modifications des informations personnelles. Veuillez vous rapprochez à l’agence Paositra la plus proche"
+            android:textAlignment="center"
+            android:textColor="@color/neutral"/>
+
+
+    </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
