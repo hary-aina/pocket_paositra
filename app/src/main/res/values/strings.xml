@@ -2,4 +2,6 @@
     <string name="app_name">Pocket</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="servicedesc">Application Protocol Data Unit Service </string>
+    <string name="aiddescription">AID</string>
 </resources>
