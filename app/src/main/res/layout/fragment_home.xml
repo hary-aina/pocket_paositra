@@ -178,64 +178,72 @@
 
         </LinearLayout>
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="9dp">
+        <LinearLayout
+            android:layout_width="360dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
-            <TableRow
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
-                <ImageButton
-                    android:id="@+id/compteActivity"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/mon_compte"
-                    app:tint="@color/black"
-                    android:background="@drawable/button_border"/>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
 
-                <ImageButton
-                    android:id="@+id/transfertActivity"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/transfert"
-                    app:tint="@color/black"
-                    android:background="@drawable/button_border"/>
+                    <ImageButton
+                        android:id="@+id/compteActivity"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/mon_compte"
+                        app:tint="@color/black"
+                        android:background="@drawable/button_border"/>
 
-            </TableRow>
+                    <ImageButton
+                        android:id="@+id/transfertActivity"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/transfert"
+                        app:tint="@color/black"
+                        android:background="@drawable/button_border"/>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                </TableRow>
 
-                <ImageButton
-                    android:id="@+id/historiqueActivity"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/historique"
-                    app:tint="@color/black"
-                    android:background="@drawable/button_border"/>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
 
-                <ImageButton
-                    android:id="@+id/paiementActivity"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/paiement"
-                    app:tint="@color/black"
-                    android:background="@drawable/button_border"/>
+                    <ImageButton
+                        android:id="@+id/historiqueActivity"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/historique"
+                        app:tint="@color/black"
+                        android:background="@drawable/button_border"/>
 
-            </TableRow>
+                    <ImageButton
+                        android:id="@+id/paiementActivity"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/paiement"
+                        app:tint="@color/black"
+                        android:background="@drawable/button_border"/>
 
-        </TableLayout>
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
