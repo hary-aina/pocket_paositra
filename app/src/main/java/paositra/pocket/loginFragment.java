@@ -2,10 +2,13 @@ package paositra.pocket;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,14 +17,41 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class loginFragment extends Fragment {
+import paositra.pocket.utils.NetworkChangeReceiver;
+
+public class loginFragment extends Fragment implements NetworkChangeReceiver.OnNetworkChangeListener {
 
     private final static String confPref = "conf_client";
     SharedPreferences preferences;
+    private NetworkChangeReceiver networkChangeReceiver;
 
-    public loginFragment() {
-        // Required empty public constructor
+    @Override
+    public void onResume() {
+        super.onResume();
+        networkChangeReceiver = new NetworkChangeReceiver(this);
+        requireActivity().registerReceiver(networkChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireActivity().unregisterReceiver(networkChangeReceiver);
+        networkChangeReceiver = null;
+    }
+    @Override
+    public void onNetworkChanged(boolean isConnected) {
+        if(isConnected){
+            //Toast.makeText(getContext(), "Connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
+            Button loginBtn = getActivity().findViewById(R.id.loginBtn);
+            loginBtn.setEnabled(true);
+            loginBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.secondary));
+        }else{
+            Button loginBtn = getActivity().findViewById(R.id.loginBtn);
+            loginBtn.setEnabled(false);
+            loginBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
+            Toast.makeText(getContext(), "Non connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
