@@ -41,6 +41,24 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/lost_connexion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="offline mode"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/info_compte"
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -87,8 +105,9 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/action_layout"
             android:layout_width="350dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal">
 
@@ -231,6 +250,24 @@
                 </TableRow>
 
             </TableLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/offline_layout"
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Veuillez vous connecter au reseau wifi pour plus d'action sur votre compte"
+                android:textStyle="bold"
+                android:textColor="@color/neutral"
+                android:layout_marginTop="25dp"/>
 
         </LinearLayout>
 
