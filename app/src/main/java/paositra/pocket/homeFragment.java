@@ -52,6 +52,15 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
             TextView solde = (TextView) getActivity().findViewById(R.id.solde);
             solde.setText("AR "+preferences.getString("solde", ""));
+
+            ImageButton historiqueActivity = getActivity().findViewById(R.id.historiqueActivity);
+            historiqueActivity.setEnabled(true);
+            historiqueActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
+
+            ImageButton transfertActivity = getActivity().findViewById(R.id.transfertActivity);
+            transfertActivity.setEnabled(true);
+            transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
+
         }else{
             Toast.makeText(getContext(), "Non connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
             LinearLayout lost_connexion = getActivity().findViewById(R.id.lost_connexion);
@@ -59,6 +68,14 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
 
             TextView solde = (TextView) getActivity().findViewById(R.id.solde);
             solde.setText("solde inconnu");
+
+            ImageButton historiqueActivity = getActivity().findViewById(R.id.historiqueActivity);
+            historiqueActivity.setEnabled(false);
+            historiqueActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
+
+            ImageButton transfertActivity = getActivity().findViewById(R.id.transfertActivity);
+            transfertActivity.setEnabled(false);
+            transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
         }
     }
 

@@ -66,6 +66,7 @@ public class PayementActivity extends AppCompatActivity implements NetworkChange
             qr_text.setTextColor(ContextCompat.getColorStateList(this, R.color.black));
             ImageButton qrcodeBtn = findViewById(R.id.qrcodeBtn);
             qrcodeBtn.setEnabled(true);
+            qrcodeBtn.setImageTintList(ContextCompat.getColorStateList(this, R.color.black));
         }else{
             Toast.makeText(this, "Non connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
             LinearLayout lost_connexion = findViewById(R.id.lost_connexion);
@@ -75,6 +76,7 @@ public class PayementActivity extends AppCompatActivity implements NetworkChange
             qr_text.setTextColor(ContextCompat.getColorStateList(this, R.color.neutral));
             ImageButton qrcodeBtn = findViewById(R.id.qrcodeBtn);
             qrcodeBtn.setEnabled(false);
+            qrcodeBtn.setImageTintList(ContextCompat.getColorStateList(this, R.color.neutral));
         }
     }
 
