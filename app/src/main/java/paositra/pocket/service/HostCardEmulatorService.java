@@ -28,15 +28,15 @@ public class HostCardEmulatorService extends HostApduService {
             return Utils.hexStringToByteArray(STATUS_FAILED);
         }
 
-        if (hexCommandApdu.substring(0, 2) != DEFAULT_CLA) {
+        if (!hexCommandApdu.substring(0, 2).equals(DEFAULT_CLA)) {
             return Utils.hexStringToByteArray(CLA_NOT_SUPPORTED);
         }
 
-        if (hexCommandApdu.substring(2, 4) != SELECT_INS) {
+        if (!hexCommandApdu.substring(2, 4).equals(SELECT_INS)) {
             return Utils.hexStringToByteArray(INS_NOT_SUPPORTED);
         }
 
-        if (hexCommandApdu.substring(10, 24) == AID)  {
+        if (hexCommandApdu.substring(10, 24).equals(AID))  {
             return Utils.hexStringToByteArray(STATUS_SUCCESS);
         } else {
             return Utils.hexStringToByteArray(STATUS_FAILED);
