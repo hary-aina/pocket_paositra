@@ -19,10 +19,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import paositra.pocket.clientApi.RetrofitClient;
 import paositra.pocket.service.ApiService;
 import paositra.pocket.utils.NetworkChangeReceiver;
@@ -147,19 +149,32 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
     //access au serveur a revoir
     private boolean authetification(View v){
 
-        String mot_de_passe = (String) v.findViewById(R.id.editTextPassword).toString();
-        String email = (String) v.findViewById(R.id.editLoginText).toString();
+        EditText editTextPassword = (EditText) v.findViewById(R.id.editTextPassword);
+        EditText editLoginText = (EditText) v.findViewById(R.id.editLoginText);
+
+        String email = editLoginText.getText().toString();
+        String mot_de_passe = editTextPassword.getText().toString();
 
         //initialisation de la connexion vers le serveur
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
-        Call<JSONObject> call = apiService.login(email, mot_de_passe);
-        call.enqueue(new Callback<JSONObject>() {
+        // Create the JSON string you want to send
+        String jsonString = "{\"email\":\""+email+"\",\"password\":"+mot_de_passe+"}";
+        // Convert the JSON string to RequestBody
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
+
+        Call<JsonObject> call = apiService.login(requestBody);
+        call.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
                     System.out.println("sucess");
                     System.out.println(response);
+
+                    JsonObject userJson = response.body();
+
+                    System.out.println(userJson);
+
                 }else{
                     System.out.println("echec de recuperation");
                     System.out.println(response);
@@ -167,7 +182,7 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 System.out.println("echec de serveur");
                 System.out.println(t);
             }
