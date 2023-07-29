@@ -19,7 +19,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.util.Map;
+
+import paositra.pocket.clientApi.RetrofitClient;
+import paositra.pocket.service.ApiService;
 import paositra.pocket.utils.NetworkChangeReceiver;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class loginFragment extends Fragment implements NetworkChangeReceiver.OnNetworkChangeListener {
 
@@ -67,33 +76,38 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
             public void onClick(View v) {
                 if(verificationChamp(view)){
 
-                    EditText editLoginText = (EditText) view.findViewById(R.id.editLoginText);
-                    EditText editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
+                    if(authetification(view)){
 
-                    //stockage des informations utilisateurs
-                    preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("nom", "RAVAOARISOA");
-                    editor.putString("prenom", "Marcel");
-                    editor.putString("adresse", "Lot II A Bis Ivandry");
-                    editor.putString("telephone", "+261 32 48 965 90");
-                    editor.putString("agence", "Antaninarenina");
+                        EditText editLoginText = (EditText) view.findViewById(R.id.editLoginText);
+                        EditText editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
 
-                    editor.putString("login", editLoginText.getText().toString());
-                    editor.putString("password", editTextPassword.getText().toString());
-                    editor.putString("idBenef", "1");
-                    editor.putString("idcarte", "1");
-                    //editor.putString("type_compte", "Paositra Money");
-                    editor.putString("type_compte", "E-poketra");
-                    editor.putString("numero_carte", "20221552555");
-                    editor.putString("numero_serie", "5621456");
-                    editor.putString("numero_compte", "0099 0007 17896541237895 88");
-                    editor.putString("solde", "20000000");
-                    editor.putString("token", "ujubeizhevuzjvbezrhbvzoerbveezouvbrvhrvizbr");
+                        //stockage des informations utilisateurs
+                        preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("nom", "RAVAOARISOA");
+                        editor.putString("prenom", "Marcel");
+                        editor.putString("adresse", "Lot II A Bis Ivandry");
+                        editor.putString("telephone", "+261 32 48 965 90");
+                        editor.putString("agence", "Antaninarenina");
 
-                    editor.commit();
+                        editor.putString("login", editLoginText.getText().toString());
+                        editor.putString("password", editTextPassword.getText().toString());
+                        editor.putString("idBenef", "1");
+                        editor.putString("idcarte", "1");
+                        //editor.putString("type_compte", "Paositra Money");
+                        editor.putString("type_compte", "E-poketra");
+                        editor.putString("numero_carte", "20221552555");
+                        editor.putString("numero_serie", "5621456");
+                        editor.putString("numero_compte", "0099 0007 17896541237895 88");
+                        editor.putString("solde", "20000000");
+                        editor.putString("token", "ujubeizhevuzjvbezrhbvzoerbveezouvbrvhrvizbr");
 
-                    ((MainActivity)getActivity()).loadHome();
+                        editor.commit();
+
+                        ((MainActivity)getActivity()).loadHome();
+
+                    }
+
                 }
             }
         });
@@ -127,6 +141,39 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
         }
 
         return result;
+    }
+
+
+    //access au serveur a revoir
+    private boolean authetification(View v){
+
+        String mot_de_passe = (String) v.findViewById(R.id.editTextPassword).toString();
+        String email = (String) v.findViewById(R.id.editLoginText).toString();
+
+        //initialisation de la connexion vers le serveur
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+
+        Call<JSONObject> call = apiService.login(email, mot_de_passe);
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if(response.isSuccessful()){
+                    System.out.println("sucess");
+                    System.out.println(response);
+                }else{
+                    System.out.println("echec de recuperation");
+                    System.out.println(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+                System.out.println("echec de serveur");
+                System.out.println(t);
+            }
+        });
+
+        return false;
     }
 
 }
