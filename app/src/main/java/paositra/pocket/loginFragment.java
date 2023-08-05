@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
-import android.widget.Toast;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import paositra.pocket.clientApi.RetrofitClient;
@@ -78,38 +76,6 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
 
                     authetification(view);
 
-                    /*if(authetification(view)){
-
-                        EditText editLoginText = (EditText) view.findViewById(R.id.editLoginText);
-                        EditText editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
-
-                        //stockage des informations utilisateurs
-                        preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString("nom", "RAVAOARISOA");
-                        editor.putString("prenom", "Marcel");
-                        editor.putString("adresse", "Lot II A Bis Ivandry");
-                        editor.putString("telephone", "+261 32 48 965 90");
-                        editor.putString("agence", "Antaninarenina");
-
-                        editor.putString("login", editLoginText.getText().toString());
-                        editor.putString("password", editTextPassword.getText().toString());
-                        editor.putString("idBenef", "1");
-                        editor.putString("idcarte", "1");
-                        //editor.putString("type_compte", "Paositra Money");
-                        editor.putString("type_compte", "E-poketra");
-                        editor.putString("numero_carte", "20221552555");
-                        editor.putString("numero_serie", "5621456");
-                        editor.putString("numero_compte", "0099 0007 17896541237895 88");
-                        editor.putString("solde", "20000000");
-                        editor.putString("token", "ujubeizhevuzjvbezrhbvzoerbveezouvbrvhrvizbr");
-
-                        editor.commit();
-
-                        ((MainActivity)getActivity()).loadHome();
-
-                    }*/
-
                 }
             }
         });
@@ -147,7 +113,7 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
 
 
     //access au serveur a revoir
-    private boolean authetification(View v){
+    private void authetification(View v){
 
         EditText editTextPassword = (EditText) v.findViewById(R.id.editTextPassword);
         EditText editLoginText = (EditText) v.findViewById(R.id.editLoginText);
@@ -278,8 +244,6 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
                 Toast.makeText(v.getContext(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
             }
         });
-
-        return false;
     }
 
 }
