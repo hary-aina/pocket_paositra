@@ -1,9 +1,13 @@
 package paositra.pocket.service;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import paositra.pocket.utils.NfcUtils;
 public class HostCardEmulatorService extends HostApduService {
 
+    private final static String confPref = "conf_client";
+    SharedPreferences preferences;
     public static final NfcUtils Utils = new NfcUtils();
     public static final String TAG = "Host Card Emulator";
     public static final String STATUS_SUCCESS = "9000";
@@ -18,6 +22,9 @@ public class HostCardEmulatorService extends HostApduService {
     @Override
     public byte[] processCommandApdu(byte[] commandApdu, Bundle bundle) {
         //Process APDU command...
+
+        preferences = getSharedPreferences(confPref, Context.MODE_PRIVATE);
+        String telephone = preferences.getString("telephone", "");
 
         if (commandApdu == null) {
             return Utils.hexStringToByteArray(STATUS_FAILED);
@@ -37,7 +44,7 @@ public class HostCardEmulatorService extends HostApduService {
         }
 
         if (hexCommandApdu.substring(10, 24).equals(AID))  {
-            return Utils.hexStringToByteArray(STATUS_SUCCESS);
+            return Utils.hexStringToByteArray(STATUS_SUCCESS+"|"+telephone);
         } else {
             return Utils.hexStringToByteArray(STATUS_FAILED);
         }

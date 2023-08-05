@@ -115,8 +115,6 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
                     boolean error = responsebody.get("error").getAsBoolean();
                     int code = responsebody.get("code").getAsInt();
 
-                    System.out.println(response.body());
-
                     if(code == 401 || code == 403){
                         //erreur token refaire l'authentification
 
