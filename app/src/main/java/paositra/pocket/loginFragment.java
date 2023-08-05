@@ -1,10 +1,8 @@
 package paositra.pocket;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 
@@ -21,7 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
-import java.util.Map;
+import android.widget.Toast;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -78,7 +76,9 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
             public void onClick(View v) {
                 if(verificationChamp(view)){
 
-                    if(authetification(view)){
+                    authetification(view);
+
+                    /*if(authetification(view)){
 
                         EditText editLoginText = (EditText) view.findViewById(R.id.editLoginText);
                         EditText editTextPassword = (EditText) view.findViewById(R.id.editTextPassword);
@@ -108,7 +108,7 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
 
                         ((MainActivity)getActivity()).loadHome();
 
-                    }
+                    }*/
 
                 }
             }
@@ -166,39 +166,40 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
                 if(response.isSuccessful()){
-                    System.out.println("sucess");
-                    System.out.println(response);
 
                     JsonObject responsebody = response.body();
 
                     boolean error = responsebody.get("error").getAsBoolean();
-                    if(!error){
+                    int code = responsebody.get("code").getAsInt();
+                    if((!error) && code == 200){
 
                         JsonObject data = responsebody.get("data").getAsJsonObject();
+
                         //recuperation token
                         String token = data.get("access_token").getAsString();
 
                         //recuperation info beneficiaire
                         JsonObject beneficiaire = data.get("beneficiaire").getAsJsonObject();
-                        int idBenef = beneficiaire.get("rowid").getAsInt();
+                        String idBenef = beneficiaire.get("rowid").getAsString();
                         String nom = beneficiaire.get("nom").getAsString();
                         String prenom = beneficiaire.get("prenom").getAsString();
-                        String cni = beneficiaire.get("cni").getAsString();
-                        String date_delivrance = beneficiaire.get("date_delivrance").getAsString();
                         String adresse = beneficiaire.get("adresse").getAsString();
                         String email = beneficiaire.get("email").getAsString();
+                        /*
+                        String cni = beneficiaire.get("cni").getAsString();
+                        String date_delivrance = beneficiaire.get("date_delivrance").getAsString();
                         String date_nais = beneficiaire.get("date_nais").getAsString();
                         String codepostal = beneficiaire.get("codepostal").getAsString();
                         String sexe = beneficiaire.get("sexe").getAsString();
                         int statut = beneficiaire.get("statut").getAsInt();
                         int etat = beneficiaire.get("etat").getAsInt();
-
-                        System.out.println(nom);
+                         */
 
                         //recuperation info compte
                         JsonObject compte = data.get("compte").getAsJsonObject();
-                        int idCarte = compte.get("rowid").getAsInt();
+                        String idCarte = compte.get("rowid").getAsString();
                         int statut_carte = compte.get("statut").getAsInt();
                         double solde = compte.get("solde").getAsDouble();
                         int solde_carte = compte.get("solde_carte").getAsInt();
@@ -206,41 +207,75 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
                         String numcompte = compte.get("numcompte").getAsString();
                         String telephone = compte.get("telephone").getAsString();
 
-                        if(compte.get("numero").isJsonNull()){
+                        String numero = "";
+                        String numero_serie = "";
+                        /*
+                        String date_expiration = "";
+                        String date_activation = "";
+                         */
 
-                        } else {
-                            String numero = compte.get("numero").getAsString();
+                        if(!compte.get("numero").isJsonNull()){
+                            numero = compte.get("numero").getAsString();
                         }
-                        if(compte.get("numero_serie").isJsonNull()){
-
-                        } else {
-                            String numero_serie = compte.get("numero_serie").getAsString();
+                        if(!compte.get("numero_serie").isJsonNull()){
+                            numero_serie = compte.get("numero_serie").getAsString();
                         }
-                        if(compte.get("date_expiration").isJsonNull()){
-
-                        } else {
-                            String date_expiration = compte.get("date_expiration").getAsString();
+                        /*if(!compte.get("date_expiration").isJsonNull()){
+                            date_expiration = compte.get("date_expiration").getAsString();
                         }
                         if(compte.get("date_activation").isJsonNull()){
-
-                        } else {
-                            String date_expiration = compte.get("date_activation").getAsString();
+                            date_activation = compte.get("date_activation").getAsString();
                         }
 
+                         */
+
+                        //stockage des informations utilisateurs
+                        preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("nom", nom);
+                        editor.putString("prenom", prenom);
+                        editor.putString("adresse", adresse);
+                        editor.putString("telephone", telephone);
+                        editor.putString("agence", "agence test");
+
+                        editor.putString("login", email);
+                        editor.putString("password", mot_de_passe);
+                        editor.putString("idBenef", idBenef);
+                        editor.putString("idcarte", idCarte);
+
+                        if(wallet_carte == 0){
+                            editor.putString("type_compte", "PAOSITRA Money");
+                            editor.putString("solde", ""+solde);
+                        }else{
+                            editor.putString("type_compte", "E-POKETRA");
+                            editor.putString("solde", ""+solde_carte);
+                        }
+
+                        editor.putInt("statut_compte", statut_carte);
+
+                        editor.putString("numero_carte", numero);
+                        editor.putString("numero_serie", numero_serie);
+                        editor.putString("numero_compte", numcompte);
+
+                        editor.putString("token", token);
+
+                        editor.commit();
+
+                        ((MainActivity)getActivity()).loadHome();
+
                     }else{
-                        System.out.println("error");
+                        String message = responsebody.get("msg").getAsString();
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
                     }
 
                 }else{
-                    System.out.println("echec de recuperation");
-                    System.out.println(response);
+                    Toast.makeText(v.getContext(), "ERREUR DE SERVICE", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                System.out.println("echec de serveur");
-                System.out.println(t);
+                Toast.makeText(v.getContext(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
             }
         });
 
