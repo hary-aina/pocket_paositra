@@ -124,7 +124,7 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         // Create the JSON string you want to send
-        String jsonString = "{\"email\":\""+email+"\",\"password\":"+mot_de_passe+"}";
+        String jsonString = "{\"email\":\""+email+"\",\"password\":\""+mot_de_passe+"\"}";
         // Convert the JSON string to RequestBody
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
 
