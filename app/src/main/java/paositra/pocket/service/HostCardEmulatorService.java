@@ -10,7 +10,7 @@ public class HostCardEmulatorService extends HostApduService {
     SharedPreferences preferences;
     public static final NfcUtils Utils = new NfcUtils();
     public static final String TAG = "Host Card Emulator";
-    public static final String STATUS_SUCCESS = "9000";
+    public String STATUS_SUCCESS = "9000";
     public static final String STATUS_FAILED = "6F00";
     public static final String CLA_NOT_SUPPORTED = "6E00";
     public static final String INS_NOT_SUPPORTED = "6D00";
@@ -44,7 +44,9 @@ public class HostCardEmulatorService extends HostApduService {
         }
 
         if (hexCommandApdu.substring(10, 24).equals(AID))  {
-            return Utils.hexStringToByteArray(STATUS_SUCCESS+"|"+telephone);
+            STATUS_SUCCESS += telephone;
+            System.out.println(STATUS_SUCCESS);
+            return Utils.hexStringToByteArray(STATUS_SUCCESS);
         } else {
             return Utils.hexStringToByteArray(STATUS_FAILED);
         }
