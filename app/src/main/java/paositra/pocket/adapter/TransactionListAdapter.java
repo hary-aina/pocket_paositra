@@ -41,20 +41,22 @@ public class TransactionListAdapter extends ArrayAdapter<JsonObject> {
 
         TextView tvnumtransaction = (TextView) convertView.findViewById(R.id.numtransaction);
         TextView tvdateTarasaction = (TextView) convertView.findViewById(R.id.date_transaction);
-        TextView tvoperation = (TextView) convertView.findViewById(R.id.operation);
         TextView tvmontant = (TextView) convertView.findViewById(R.id.montant);
 
         if(operation.equalsIgnoreCase("DEBIT")){
-            tvoperation.setTextColor(mContext.getResources().getColor(R.color.danger));
+            montant = "-" + montant;
+            tvmontant.setText(montant);
+            tvmontant.setTextColor(mContext.getResources().getColor(R.color.danger));
         }
 
         if(operation.equalsIgnoreCase("CREDIT")){
-            tvoperation.setTextColor(mContext.getResources().getColor(R.color.success));
+            montant = "+" + montant;
+            tvmontant.setText(montant);
+            tvmontant.setTextColor(mContext.getResources().getColor(R.color.success));
         }
 
         tvnumtransaction.setText(numtransaction);
         tvdateTarasaction.setText(date_transaction);
-        tvoperation.setText(operation);
         tvmontant.setText(montant);
 
         return convertView;
