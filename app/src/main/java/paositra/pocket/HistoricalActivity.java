@@ -9,9 +9,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import paositra.pocket.adapter.TransactionListAdapter;
 import paositra.pocket.utils.NetworkChangeReceiver;
 
 public class HistoricalActivity extends AppCompatActivity implements NetworkChangeReceiver.OnNetworkChangeListener{
@@ -24,6 +31,21 @@ public class HistoricalActivity extends AppCompatActivity implements NetworkChan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historical);
         networkChangeReceiver = new NetworkChangeReceiver(this);
+
+        //load historique
+        ListView lvTransac = (ListView)findViewById(R.id.listTransaction);
+        //static data
+        ArrayList<JsonObject> transactions = new ArrayList<JsonObject>();
+        for(int i = 0; i < 10; i++){
+            JsonObject item = new JsonObject();
+            item.addProperty("numtransaction", "36441");
+            item.addProperty("date_transaction", "2023-03-01");
+            item.addProperty("operation", "DEBIT");
+            item.addProperty("montant", "100");
+            transactions.add(item);
+        }
+        TransactionListAdapter adapter = new TransactionListAdapter(this, R.layout.adater_view_transaction, transactions);
+        lvTransac.setAdapter(adapter);
 
         //finish
         ImageButton returnBtn = (ImageButton)findViewById(R.id.retour);

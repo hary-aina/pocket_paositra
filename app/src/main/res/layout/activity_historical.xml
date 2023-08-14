@@ -54,13 +54,20 @@
                 android:layout_marginVertical="10dp"
                 android:textStyle="bold"/>
 
-            <TextView
+            <ListView
+                android:id="@+id/listTransaction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="aucune transactions"
                 android:textColor="@color/neutral"
                 android:gravity="center"
-                android:textAlignment="center"/>
+                android:textAlignment="center"/>-->
+
+
 
         </LinearLayout>
 
