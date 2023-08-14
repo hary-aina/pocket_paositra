@@ -59,13 +59,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!-- <TextView
+            <TextView
+                android:id="@+id/txt_nonTrans"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="aucune transactions"
                 android:textColor="@color/neutral"
                 android:gravity="center"
-                android:textAlignment="center"/>-->
+                android:textAlignment="center"/>
 
 
 

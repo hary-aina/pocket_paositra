@@ -2,42 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="50dp">
 
 
     <TextView
         android:id="@+id/numtransaction"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="00345" />
 
     <TextView
         android:id="@+id/date_transaction"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="2023-31-09" />
 
     <TextView
         android:id="@+id/operation"
-        android:textColor="@color/danger"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="DEBIT" />
 
     <TextView
         android:id="@+id/montant"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:textSize="18dp"
         android:text="100" />
+
 </LinearLayout>

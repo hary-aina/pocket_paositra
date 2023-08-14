@@ -96,7 +96,7 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
         //hide some view
         if(preferences.getString("type_compte", "").equalsIgnoreCase("Paositra Money")){
             LinearLayout visa_info = (LinearLayout) view.findViewById(R.id.visa_info);
-            visa_info.setVisibility(View.GONE);
+            visa_info.setVisibility(View.INVISIBLE);
         }
 
         //start Info Perso Activity
