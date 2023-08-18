@@ -65,7 +65,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="offline mode"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
