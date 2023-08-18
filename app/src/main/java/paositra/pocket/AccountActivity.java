@@ -100,10 +100,6 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
 
         //initialisation de la connexion vers le serveur
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
-        // Create the JSON string you want to send
-        String jsonString = "{}";
-        // Convert the JSON string to RequestBody
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
         Call<JsonObject> call = apiService.activateAccount("Bearer "+preferences.getString("token", ""));
         call.enqueue(new Callback<JsonObject>() {
             @Override

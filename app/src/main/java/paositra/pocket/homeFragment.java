@@ -22,7 +22,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import paositra.pocket.clientApi.RetrofitClient;
+import paositra.pocket.service.ApiService;
 import paositra.pocket.utils.NetworkChangeReceiver;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Header;
+import retrofit2.http.Path;
 
 public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNetworkChangeListener {
 
@@ -44,36 +55,31 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
     }
     @Override
     public void onNetworkChanged(boolean isConnected) {
+        LinearLayout lost_connexion = getActivity().findViewById(R.id.lost_connexion);
+        Button actualiserBtn = (Button) getActivity().findViewById(R.id.actualiser_solde);
+        TextView solde = (TextView) getActivity().findViewById(R.id.solde);
+        ImageButton historiqueActivity = getActivity().findViewById(R.id.historiqueActivity);
+        ImageButton transfertActivity = getActivity().findViewById(R.id.transfertActivity);
         if(isConnected){
             //Toast.makeText(getContext(), "Connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
-            LinearLayout lost_connexion = getActivity().findViewById(R.id.lost_connexion);
             lost_connexion.setVisibility(View.GONE);
-
+            actualiserBtn.setEnabled(true);
+            actualiserBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.primary));
             preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
-            TextView solde = (TextView) getActivity().findViewById(R.id.solde);
             solde.setText("AR "+preferences.getString("solde", ""));
-
-            ImageButton historiqueActivity = getActivity().findViewById(R.id.historiqueActivity);
             historiqueActivity.setEnabled(true);
             historiqueActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
-
-            ImageButton transfertActivity = getActivity().findViewById(R.id.transfertActivity);
             transfertActivity.setEnabled(true);
             transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
 
         }else{
             Toast.makeText(getContext(), "Non connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
-            LinearLayout lost_connexion = getActivity().findViewById(R.id.lost_connexion);
             lost_connexion.setVisibility(View.VISIBLE);
-
-            TextView solde = (TextView) getActivity().findViewById(R.id.solde);
+            actualiserBtn.setEnabled(false);
+            actualiserBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
             solde.setText("solde inconnu");
-
-            ImageButton historiqueActivity = getActivity().findViewById(R.id.historiqueActivity);
             historiqueActivity.setEnabled(false);
             historiqueActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
-
-            ImageButton transfertActivity = getActivity().findViewById(R.id.transfertActivity);
             transfertActivity.setEnabled(false);
             transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
         }
@@ -144,6 +150,16 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             }
         });
 
+        //actualiser sont solde
+        Button actubtn = (Button) view.findViewById(R.id.actualiser_solde);
+        actubtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getSolde(view);
+                    }
+                }
+        );
+
         return view;
     }
 
@@ -169,6 +185,66 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
     public void startPaiementActivity(View v){
         Intent paiementActivity = new Intent(v.getContext().getApplicationContext(), PayementActivity.class);
         startActivity(paiementActivity);
+    }
+
+    //get solde
+    public void getSolde(View v){
+        preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+        String type_compte = preferences.getString("type_compte", "");
+        String wallet_carte = "0";
+        if(!type_compte.equalsIgnoreCase("PAOSITRA Money")){
+            wallet_carte = "1";
+        }
+        String token = preferences.getString("token", "");
+
+        //initialisation de la connexion vers le serveur
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+        Call<JsonObject> call = apiService.getSolde(wallet_carte, "Bearer "+token);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.isSuccessful()){
+                    JsonObject responsebody = response.body();
+                    boolean error = responsebody.get("error").getAsBoolean();
+                    int code = responsebody.get("code").getAsInt();
+
+                    if(code == 401 || code == 403){
+                        //erreur token refaire l'authentification
+                        Toast.makeText(v.getContext(), "RECONNEXION REQUIS", Toast.LENGTH_LONG).show();
+                        preferences = v.getContext().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.commit();
+                        Intent MainActivity = new Intent(v.getContext(), MainActivity.class);
+                        startActivity(MainActivity);
+
+                    } else if (error == true) {
+                        //erreu de service
+                        JsonObject data = responsebody.get("data").getAsJsonObject();
+                        String message = data.get("errorMessage").getAsString();
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+                    }else{
+                        SharedPreferences.Editor editor = preferences.edit();
+                        JsonObject data = responsebody.get("data").getAsJsonObject();
+                        TextView tvsolde = (TextView) v.findViewById(R.id.solde);
+                        String solde = data.get("solde").getAsString();
+                        editor.putString("solde", solde);
+                        tvsolde.setText("AR "+solde);
+
+                        editor.commit();
+                    }
+
+                }else{
+                    Toast.makeText(v.getContext(), "ERREUR SERVICE", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(v.getContext(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     //deconnexion
