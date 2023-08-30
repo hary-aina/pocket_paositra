@@ -1,6 +1,7 @@
 package paositra.pocket;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -14,13 +15,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import paositra.pocket.adapter.TransactionListAdapter;
 import paositra.pocket.clientApi.RetrofitClient;
 import paositra.pocket.service.ApiService;
 import paositra.pocket.utils.NetworkChangeReceiver;
@@ -225,10 +235,13 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
 
                         editor.putString("token", token);
 
+                        //date de consultation
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        Date date = new Date();
+                        editor.putString("last_update", formatter.format(date));
                         editor.commit();
 
-                        ((MainActivity)getActivity()).loadHome();
-
+                        loadTransaction(v);
                     }else{
                         String message = responsebody.get("msg").getAsString();
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
@@ -244,6 +257,64 @@ public class loginFragment extends Fragment implements NetworkChangeReceiver.OnN
                 Toast.makeText(v.getContext(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    //load transaction
+    public void loadTransaction(View v){
+
+        //initialisation de la connexion vers le serveur
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+        String token = preferences.getString("token", "");
+        Call<JsonObject> call = apiService.getLastTenTransactions("Bearer "+ token);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.isSuccessful()){
+
+                    JsonObject responsebody = response.body();
+                    boolean error = responsebody.get("error").getAsBoolean();
+                    int code = responsebody.get("code").getAsInt();
+
+                    if(code == 401 || code == 403){
+                        //erreur token refaire l'authentification
+
+                        Toast.makeText(v.getContext(), "RECONNEXION REQUIS", Toast.LENGTH_LONG).show();
+                        preferences = v.getContext().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.commit();
+                        Intent MainActivity = new Intent(v.getContext(), MainActivity.class);
+                        startActivity(MainActivity);
+
+                    } else if (error == true) {
+                        //werror de service
+                        String message = responsebody.get("data").getAsString();
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+
+                    }else{
+                        //success
+                        JsonArray data = responsebody.get("data").getAsJsonArray();
+                        Gson gson = new Gson();
+                        String jsonArrayStringTransaction = gson.toJson(data);
+
+                        preferences = v.getContext().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("transactions", jsonArrayStringTransaction);
+                        editor.commit();
+
+                        ((MainActivity)getActivity()).loadHome();
+                    }
+                }else{
+                    Toast.makeText(v.getContext(), "ERREUR DE SERVICE", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(v.getContext(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 }

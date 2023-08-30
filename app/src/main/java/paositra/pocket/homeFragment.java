@@ -18,14 +18,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import paositra.pocket.adapter.TransactionListAdapter;
 import paositra.pocket.clientApi.RetrofitClient;
 import paositra.pocket.service.ApiService;
 import paositra.pocket.utils.NetworkChangeReceiver;
@@ -93,16 +102,39 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
 
         //chargement des informations
         preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
-
         TextView type_compte = (TextView) view.findViewById(R.id.type_compte);
         type_compte.setText(preferences.getString("type_compte", ""));
         TextView solde = (TextView) view.findViewById(R.id.solde);
         solde.setText("AR "+preferences.getString("solde", ""));
+        TextView tv_last_update_time = (TextView) view.findViewById(R.id.last_update_time);
+        tv_last_update_time.setText(preferences.getString("last_update", ""));
+
+        TextView txt_no_transac = (TextView) view.findViewById(R.id.txt_nonTrans);
+        ListView lvTransac = (ListView) view.findViewById(R.id.listTransaction);
+        txt_no_transac.setVisibility(View.VISIBLE);
+        lvTransac.setVisibility(View.GONE);
+
+        String jsonArrayStringTransaction = preferences.getString( "transactions",null);
+        if (jsonArrayStringTransaction != null) {
+            Gson gson = new Gson();
+            JsonArray data = gson.fromJson(jsonArrayStringTransaction, JsonArray.class);
+            if(data.size() > 0){
+                txt_no_transac.setVisibility(View.GONE);
+                lvTransac.setVisibility(View.VISIBLE);
+                ArrayList<JsonObject> transactions = new ArrayList<JsonObject>();
+                for (JsonElement item : data) {
+                    JsonObject object = item.getAsJsonObject();
+                    transactions.add(object);
+                }
+                TransactionListAdapter adapter = new TransactionListAdapter(view.getContext(), R.layout.adater_view_transaction, transactions);
+                lvTransac.setAdapter(adapter);
+            }
+        }
 
         //hide some view
         if(preferences.getString("type_compte", "").equalsIgnoreCase("Paositra Money")){
             LinearLayout visa_info = (LinearLayout) view.findViewById(R.id.visa_info);
-            visa_info.setVisibility(View.INVISIBLE);
+            visa_info.setVisibility(View.GONE);
         }
 
         //start Info Perso Activity
@@ -156,6 +188,7 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
                     @Override
                     public void onClick(View v) {
                         getSolde(view);
+                        loadTransaction(view);
                     }
                 }
         );
@@ -220,8 +253,7 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
 
                     } else if (error == true) {
                         //erreu de service
-                        JsonObject data = responsebody.get("data").getAsJsonObject();
-                        String message = data.get("errorMessage").getAsString();
+                        String message = responsebody.get("data").getAsString();
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
                     }else{
                         SharedPreferences.Editor editor = preferences.edit();
@@ -231,11 +263,102 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
                         editor.putString("solde", solde);
                         tvsolde.setText("AR "+solde);
 
+                        TextView tv_last_update_time = (TextView) v.findViewById(R.id.last_update_time);
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        Date date = new Date();
+                        editor.putString("last_update", formatter.format(date));
+                        tv_last_update_time.setText(formatter.format(date));
                         editor.commit();
                     }
 
                 }else{
                     Toast.makeText(v.getContext(), "ERREUR SERVICE", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(v.getContext(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    //get transaction
+    public void loadTransaction(View v){
+
+        //initialisation de la connexion vers le serveur
+        ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+        String token = preferences.getString("token", "");
+        Call<JsonObject> call = apiService.getLastTenTransactions("Bearer "+ token);
+
+        TextView txt_no_transac = (TextView) v.findViewById(R.id.txt_nonTrans);
+        ListView lvTransac = (ListView) v.findViewById(R.id.listTransaction);
+        txt_no_transac.setVisibility(View.VISIBLE);
+        lvTransac.setVisibility(View.GONE);
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.isSuccessful()){
+
+                    JsonObject responsebody = response.body();
+                    boolean error = responsebody.get("error").getAsBoolean();
+                    int code = responsebody.get("code").getAsInt();
+
+                    if(code == 401 || code == 403){
+                        //erreur token refaire l'authentification
+
+                        Toast.makeText(v.getContext(), "RECONNEXION REQUIS", Toast.LENGTH_LONG).show();
+                        preferences = v.getContext().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.commit();
+                        Intent MainActivity = new Intent(v.getContext(), MainActivity.class);
+                        startActivity(MainActivity);
+
+                    } else if (error == true) {
+                        //werror de service
+                        String message = responsebody.get("data").getAsString();
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+
+                    }else{
+                        //success
+                        JsonArray data = responsebody.get("data").getAsJsonArray();
+                        Gson gson = new Gson();
+                        String jsonArrayStringTransaction = gson.toJson(data);
+
+                        preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("transactions", jsonArrayStringTransaction);
+                        editor.apply();
+                        editor.commit();
+
+                        //static data
+                        ArrayList<JsonObject> transactions = new ArrayList<JsonObject>();
+                        /*for(int i = 0; i < 10; i++){
+                            JsonObject item = new JsonObject();
+                            item.addProperty("numtransaction", "36441");
+                            item.addProperty("date_transaction", "2023-03-01");
+                            item.addProperty("operation", "DEBIT");
+                            item.addProperty("montant", "100");
+                            transactions.add(item);
+                        }*/
+
+                        if(data.size() > 0){
+                            txt_no_transac.setVisibility(View.GONE);
+                            lvTransac.setVisibility(View.VISIBLE);
+                            for (JsonElement item : data) {
+                                JsonObject object = item.getAsJsonObject();
+                                transactions.add(object);
+                            }
+                            TransactionListAdapter adapter = new TransactionListAdapter(v.getContext(), R.layout.adater_view_transaction, transactions);
+                            lvTransac.setAdapter(adapter);
+                        }
+                    }
+
+                }else{
+                    Toast.makeText(v.getContext(), "ERREUR DE SERVICE", Toast.LENGTH_LONG).show();
                 }
             }
 

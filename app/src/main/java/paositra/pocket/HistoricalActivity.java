@@ -47,7 +47,7 @@ public class HistoricalActivity extends AppCompatActivity implements NetworkChan
         preferences = getSharedPreferences(confPref, Context.MODE_PRIVATE);
 
         //load historique
-        loadTransaction(this);
+        //loadTransaction(this);
 
         //finish
         ImageButton returnBtn = (ImageButton)findViewById(R.id.retour);
@@ -79,7 +79,7 @@ public class HistoricalActivity extends AppCompatActivity implements NetworkChan
     }
 
     //get transaction
-    public void loadTransaction(Context context){
+    /*public void loadTransaction(Context context){
 
         //initialisation de la connexion vers le serveur
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
@@ -131,7 +131,7 @@ public class HistoricalActivity extends AppCompatActivity implements NetworkChan
                             transactions.add(item);
                         }*/
 
-                        if(data.size() > 0){
+                        /*if(data.size() > 0){
                             txt_no_transac.setVisibility(View.GONE);
                             lvTransac.setVisibility(View.VISIBLE);
                             for (JsonElement item : data) {
@@ -154,5 +154,5 @@ public class HistoricalActivity extends AppCompatActivity implements NetworkChan
             }
         });
 
-    }
+    }*/
 }
