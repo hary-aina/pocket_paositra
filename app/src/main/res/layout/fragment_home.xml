@@ -238,7 +238,7 @@
                         app:tint="@color/black"
                         android:background="@drawable/button_border"/>
 
-                    <ImageButton
+                    <!--<ImageButton
                         android:id="@+id/historiqueActivity"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
@@ -246,7 +246,7 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/historique"
                         app:tint="@color/black"
-                        android:background="@drawable/button_border"/>
+                        android:background="@drawable/button_border"/>-->
 
                     <ImageButton
                         android:id="@+id/paiementActivity"
