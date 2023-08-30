@@ -4,9 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/servicetransaction"
+        android:textColor="@color/secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Paiement JIRAMA" />
 
     <TextView
-        android:id="@+id/numtransaction"
+        android:id="@+id/comtransaction"
         android:textColor="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +22,7 @@
 
     <TextView
         android:id="@+id/date_transaction"
-        android:textColor="@color/black"
+        android:textColor="@color/neutral"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18dp"

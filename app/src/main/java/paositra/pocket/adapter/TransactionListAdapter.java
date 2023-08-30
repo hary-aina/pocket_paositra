@@ -12,7 +12,10 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import paositra.pocket.R;
 
@@ -35,11 +38,14 @@ public class TransactionListAdapter extends ArrayAdapter<JsonObject> {
         String date_transaction = getItem(position).get("date_transaction").getAsString();
         String operation = getItem(position).get("operation").getAsString();
         String montant = getItem(position).get("montant").getAsString();
+        String commentaire = getItem(position).get("commentaire").getAsString();
+        String service = getItem(position).get("service").getAsString();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mRessource, parent, false);
 
-        TextView tvnumtransaction = (TextView) convertView.findViewById(R.id.numtransaction);
+        TextView tvcomtransaction = (TextView) convertView.findViewById(R.id.comtransaction);
+        TextView tvservicetransaction = (TextView) convertView.findViewById(R.id.servicetransaction);
         TextView tvdateTarasaction = (TextView) convertView.findViewById(R.id.date_transaction);
         TextView tvmontant = (TextView) convertView.findViewById(R.id.montant);
 
@@ -55,8 +61,18 @@ public class TransactionListAdapter extends ArrayAdapter<JsonObject> {
             tvmontant.setTextColor(mContext.getResources().getColor(R.color.success));
         }
 
-        tvnumtransaction.setText(numtransaction);
-        tvdateTarasaction.setText(date_transaction);
+        String outputDateFormat = "dd/MM/yyyy HH:mm:ss";
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);
+        try{
+            Date inputDate = inputFormat.parse(date_transaction);
+            String outputDateString = outputFormat.format(inputDate);
+            tvdateTarasaction.setText(outputDateString);
+        }catch (ParseException e){
+            tvdateTarasaction.setText("inconnue");
+        }
+        tvcomtransaction.setText(commentaire);
+        tvservicetransaction.setText(service);
         tvmontant.setText(montant);
 
         return convertView;

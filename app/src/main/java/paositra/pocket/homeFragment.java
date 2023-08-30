@@ -67,8 +67,7 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
         LinearLayout lost_connexion = getActivity().findViewById(R.id.lost_connexion);
         Button actualiserBtn = (Button) getActivity().findViewById(R.id.actualiser_solde);
         TextView solde = (TextView) getActivity().findViewById(R.id.solde);
-        ImageButton historiqueActivity = getActivity().findViewById(R.id.historiqueActivity);
-        ImageButton transfertActivity = getActivity().findViewById(R.id.transfertActivity);
+        ImageButton transfertActivity = (ImageButton) getActivity().findViewById(R.id.transfertActivity);
         if(isConnected){
             //Toast.makeText(getContext(), "Connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
             lost_connexion.setVisibility(View.GONE);
@@ -76,8 +75,6 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             actualiserBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.primary));
             preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
             solde.setText("AR "+preferences.getString("solde", ""));
-            historiqueActivity.setEnabled(true);
-            historiqueActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
             transfertActivity.setEnabled(true);
             transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
 
@@ -87,8 +84,6 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             actualiserBtn.setEnabled(false);
             actualiserBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
             solde.setText("solde inconnu");
-            historiqueActivity.setEnabled(false);
-            historiqueActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
             transfertActivity.setEnabled(false);
             transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
         }
@@ -164,15 +159,6 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             }
         });
 
-        //start historical activity
-        ImageButton histoBtn = view.findViewById(R.id.historiqueActivity);
-        histoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startHistoricalActivity(v);
-            }
-        });
-
         //start payement activity
         ImageButton payBtn = view.findViewById(R.id.paiementActivity);
         payBtn.setOnClickListener(new View.OnClickListener() {
@@ -209,10 +195,10 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
     }
 
     //start historical
-    public void startHistoricalActivity(View v){
+    /*public void startHistoricalActivity(View v){
         Intent historicalActivity = new Intent(v.getContext().getApplicationContext(), HistoricalActivity.class);
         startActivity(historicalActivity);
-    }
+    }*/
 
     //start paiement Activity
     public void startPaiementActivity(View v){
