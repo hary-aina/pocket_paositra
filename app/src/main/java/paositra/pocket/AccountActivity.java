@@ -3,7 +3,9 @@ package paositra.pocket;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -64,14 +67,176 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
             statut.setTextColor(getResources().getColor(R.color.danger));
         }
 
+        Context me = this;
         switch1.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                    @Override
                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                        if(isChecked){
-                           activerCompte();
+                           //generer un pin de securité
+                           //initialisation de la connexion vers le serveur
+                           ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+                           // Create the JSON string you want to send
+                           String jsonString = "{\"motif\":\"Activation\"}";
+                           // Convert the JSON string to RequestBody
+                           RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
+
+                           Call<JsonObject> call = apiService.attempt("Bearer "+preferences.getString("token", ""), requestBody);
+                           call.enqueue(new Callback<JsonObject>() {
+                               @Override
+                               public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                                   if(response.isSuccessful()){
+
+                                       JsonObject responsebody = response.body();
+                                       boolean error = responsebody.get("error").getAsBoolean();
+                                       int code = responsebody.get("code").getAsInt();
+
+                                       if(code == 401 || code == 403){
+                                           //erreur token refaire l'authentification
+
+                                           Toast.makeText(getApplication(), "RECONNEXION REQUIS", Toast.LENGTH_LONG).show();
+                                           preferences = getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                                           SharedPreferences.Editor editor = preferences.edit();
+                                           editor.clear();
+                                           editor.commit();
+                                           Intent MainActivity = new Intent(getApplication(), MainActivity.class);
+                                           startActivity(MainActivity);
+                                           finish();
+
+                                       } else if (error == true) {
+                                           //erreu de service
+                                           String message = responsebody.get("data").getAsString();
+                                           Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
+                                       }else{
+                                           //success
+
+                                           // Create an AlertDialog
+                                           AlertDialog.Builder builder = new AlertDialog.Builder(me);
+                                           builder.setTitle("Pin de sécurité");
+
+                                           // Set up the input
+                                           final EditText input = new EditText(me);
+                                           input.setHint("Saisir le code");
+                                           input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                           builder.setView(input);
+
+                                           // Set up the buttons
+                                           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   String pin = input.getText().toString();
+                                                   activerCompte(pin);
+                                               }
+                                           });
+                                           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   Intent AccountActivity = new Intent(getApplication(), AccountActivity.class);
+                                                   startActivity(AccountActivity);
+                                                   finish();
+                                                   dialog.cancel();
+                                               }
+                                           });
+                                           AlertDialog alertDialog = builder.create();
+                                           alertDialog.show();
+
+                                       }
+
+                                   }else{
+                                       Toast.makeText(getApplication(), "ERREUR DE SERVICE", Toast.LENGTH_LONG).show();
+                                   }
+
+                               }
+
+                               @Override
+                               public void onFailure(Call<JsonObject> call, Throwable t) {
+                                   Toast.makeText(getApplication(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
+                               }
+                           });
+
                        }else{
-                           desactiverCompte();
+                           //generer un pin de securité
+                           //initialisation de la connexion vers le serveur
+                           ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
+                           // Create the JSON string you want to send
+                           String jsonString = "{\"motif\":\"Desactivation\"}";
+                           // Convert the JSON string to RequestBody
+                           RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
+
+                           Call<JsonObject> call = apiService.attempt("Bearer "+preferences.getString("token", ""), requestBody);
+                           call.enqueue(new Callback<JsonObject>() {
+                               @Override
+                               public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                                   if(response.isSuccessful()){
+
+                                       JsonObject responsebody = response.body();
+                                       boolean error = responsebody.get("error").getAsBoolean();
+                                       int code = responsebody.get("code").getAsInt();
+
+                                       if(code == 401 || code == 403){
+                                           //erreur token refaire l'authentification
+
+                                           Toast.makeText(getApplication(), "RECONNEXION REQUIS", Toast.LENGTH_LONG).show();
+                                           preferences = getSharedPreferences(confPref, Context.MODE_PRIVATE);
+                                           SharedPreferences.Editor editor = preferences.edit();
+                                           editor.clear();
+                                           editor.commit();
+                                           Intent MainActivity = new Intent(getApplication(), MainActivity.class);
+                                           startActivity(MainActivity);
+                                           finish();
+
+                                       } else if (error == true) {
+                                           //erreu de service
+                                           String message = responsebody.get("data").getAsString();
+                                           Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
+
+                                       }else{
+                                           //success
+
+                                           // Create an AlertDialog
+                                           AlertDialog.Builder builder = new AlertDialog.Builder(me);
+                                           builder.setTitle("Pin de sécurité");
+
+                                           // Set up the input
+                                           final EditText input = new EditText(me);
+                                           input.setHint("Saisir le code");
+                                           input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                           builder.setView(input);
+
+                                           // Set up the buttons
+                                           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   String pin = input.getText().toString();
+                                                   desactiverCompte(pin);
+                                               }
+                                           });
+                                           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(DialogInterface dialog, int which) {
+                                                   Intent AccountActivity = new Intent(getApplication(), AccountActivity.class);
+                                                   startActivity(AccountActivity);
+                                                   finish();
+                                                   dialog.cancel();
+                                               }
+                                           });
+                                           AlertDialog alertDialog = builder.create();
+                                           alertDialog.show();
+                                       }
+
+                                   }else{
+                                       Toast.makeText(getApplication(), "ERREUR DE SERVICE", Toast.LENGTH_LONG).show();
+                                   }
+
+                               }
+
+                               @Override
+                               public void onFailure(Call<JsonObject> call, Throwable t) {
+                                   Toast.makeText(getApplication(), "ERREUR SERVEUR", Toast.LENGTH_LONG).show();
+                               }
+                           });
                        }
                    }
                }
@@ -96,11 +261,16 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
 
 
     //activer compte
-    private void activerCompte(){
+    private void activerCompte(String pin){
 
         //initialisation de la connexion vers le serveur
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
-        Call<JsonObject> call = apiService.activateAccount("Bearer "+preferences.getString("token", ""));
+        // Create the JSON string you want to send
+        String jsonString = "{\"pin\":\""+pin+"\"}";
+        // Convert the JSON string to RequestBody
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
+
+        Call<JsonObject> call = apiService.activateAccount("Bearer "+preferences.getString("token", ""), requestBody);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -128,15 +298,19 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
                         String message = responsebody.get("data").getAsString();
                         Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
 
+                        Intent AccountActivity = new Intent(getApplication(), AccountActivity.class);
+                        startActivity(AccountActivity);
+                        finish();
+
                     }else{
                         //success
                         preferences = getSharedPreferences(confPref, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putInt("statut_compte", 1);
                         editor.commit();
-                        Switch switch1 = (Switch) findViewById(R.id.switch1);
+                        //Switch switch1 = (Switch) findViewById(R.id.switch1);
                         TextView statut = (TextView) findViewById(R.id.statut);
-                        switch1.setChecked(true);
+                        //switch1.setChecked(true);
                         statut.setText("active");
                         statut.setTextColor(getResources().getColor(R.color.success));
                     }
@@ -155,15 +329,15 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
     }
 
     //activer compte
-    private void desactiverCompte(){
+    private void desactiverCompte(String pin){
 
         //initialisation de la connexion vers le serveur
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         // Create the JSON string you want to send
-        String jsonString = "{}";
+        String jsonString = "{\"pin\":\""+pin+"\"}";
         // Convert the JSON string to RequestBody
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString);
-        Call<JsonObject> call = apiService.unactivateAccount("Bearer "+preferences.getString("token", ""));
+        Call<JsonObject> call = apiService.unactivateAccount("Bearer "+preferences.getString("token", ""), requestBody);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -193,15 +367,19 @@ public class AccountActivity extends AppCompatActivity implements NetworkChangeR
                         String message = responsebody.get("data").getAsString();
                         Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
 
+                        Intent AccountActivity = new Intent(getApplication(), AccountActivity.class);
+                        startActivity(AccountActivity);
+                        finish();
+
                     }else{
                         //success
                         preferences = getSharedPreferences(confPref, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putInt("statut_compte", 0);
                         editor.commit();
-                        Switch switch1 = (Switch) findViewById(R.id.switch1);
+                        //Switch switch1 = (Switch) findViewById(R.id.switch1);
                         TextView statut = (TextView) findViewById(R.id.statut);
-                        switch1.setChecked(false);
+                        //switch1.setChecked(false);
                         statut.setText("desactive");
                         statut.setTextColor(getResources().getColor(R.color.danger));
                     }

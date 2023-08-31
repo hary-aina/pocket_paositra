@@ -22,15 +22,20 @@ public interface ApiService {
     @GET("operation/carte/getSolde/{wallet_carte}")
     Call<JsonObject> getSolde(@Path("wallet_carte") String wallet_carte, @Header("Authorization") String authorization);
 
+    //attemp
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("operation/carte/attempt")
+    Call<JsonObject> attempt(@Header("Authorization") String authorization, @Body RequestBody requestBody);
+
     //activate compte
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("operation/carte/activerCarte")
-    Call<JsonObject> activateAccount(@Header("Authorization") String authorization);
+    Call<JsonObject> activateAccount(@Header("Authorization") String authorization, @Body RequestBody requestBody);
 
     //desactiver compte
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("operation/carte/desactiverCarte")
-    Call<JsonObject> unactivateAccount(@Header("Authorization") String authorization);
+    Call<JsonObject> unactivateAccount(@Header("Authorization") String authorization, @Body RequestBody requestBody);
 
     //avoir les dix dernier transaction
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
