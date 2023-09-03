@@ -164,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginVertical="10dp"
-                    android:text="Rapprocher le dos de votre smartphone de l’autre terminal de paiement pour lancer automatiquement la transaction"
+                    android:text="Rapprocher le dos de votre smartphone sur l’autre terminal de paiement pour lancer automatiquement la transaction"
                     android:textAlignment="center"
                     android:textColor="@color/neutral"
                     android:textStyle="bold" />
