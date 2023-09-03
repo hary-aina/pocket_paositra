@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,11 +25,13 @@ public class TransactionListAdapter extends ArrayAdapter<JsonObject> {
 
     private Context mContext;
     int mRessource;
+    private DecimalFormat df;
 
     public TransactionListAdapter(Context context, int ressource, ArrayList<JsonObject> objects){
         super(context, ressource, objects);
         mContext = context;
         mRessource = ressource;
+        df = new DecimalFormat("#,###.00");;
     }
 
     @NonNull
@@ -50,13 +53,13 @@ public class TransactionListAdapter extends ArrayAdapter<JsonObject> {
         TextView tvmontant = (TextView) convertView.findViewById(R.id.montant);
 
         if(operation.equalsIgnoreCase("DEBIT")){
-            montant = "-" + montant;
+            montant = "-" + df.format(Double.parseDouble(montant));
             tvmontant.setText(montant);
             tvmontant.setTextColor(mContext.getResources().getColor(R.color.danger));
         }
 
         if(operation.equalsIgnoreCase("CREDIT")){
-            montant = "+" + montant;
+            montant = "+" + df.format(Double.parseDouble(montant));
             tvmontant.setText(montant);
             tvmontant.setTextColor(mContext.getResources().getColor(R.color.success));
         }

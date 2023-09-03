@@ -28,6 +28,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +50,7 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
     private final static String confPref = "conf_client";
     SharedPreferences preferences;
     private NetworkChangeReceiver networkChangeReceiver;
+    private DecimalFormat df;
 
     @Override
     public void onResume() {
@@ -66,7 +68,6 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
     public void onNetworkChanged(boolean isConnected) {
         LinearLayout lost_connexion = getActivity().findViewById(R.id.lost_connexion);
         Button actualiserBtn = (Button) getActivity().findViewById(R.id.actualiser_solde);
-        TextView solde = (TextView) getActivity().findViewById(R.id.solde);
         ImageButton transfertActivity = (ImageButton) getActivity().findViewById(R.id.transfertActivity);
         if(isConnected){
             //Toast.makeText(getContext(), "Connecter au reseau wi-fi", Toast.LENGTH_SHORT).show();
@@ -74,7 +75,6 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             actualiserBtn.setEnabled(true);
             actualiserBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.primary));
             preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
-            solde.setText("AR "+preferences.getString("solde", ""));
             transfertActivity.setEnabled(true);
             transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.black));
 
@@ -93,13 +93,14 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        df = new DecimalFormat("#,###.00");
 
         //chargement des informations
         preferences = getActivity().getSharedPreferences(confPref, Context.MODE_PRIVATE);
         TextView type_compte = (TextView) view.findViewById(R.id.type_compte);
         type_compte.setText(preferences.getString("type_compte", ""));
         TextView solde = (TextView) view.findViewById(R.id.solde);
-        solde.setText("AR "+preferences.getString("solde", ""));
+        solde.setText("AR " + df.format(Double.parseDouble(preferences.getString("solde", ""))));
         TextView tv_last_update_time = (TextView) view.findViewById(R.id.last_update_time);
         tv_last_update_time.setText(preferences.getString("last_update", ""));
 
@@ -246,7 +247,7 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
                         TextView tvsolde = (TextView) v.findViewById(R.id.solde);
                         String solde = data.get("solde").getAsString();
                         editor.putString("solde", solde);
-                        tvsolde.setText("AR "+solde);
+                        tvsolde.setText("AR "+  df.format(Double.parseDouble(solde)));
 
                         TextView tv_last_update_time = (TextView) v.findViewById(R.id.last_update_time);
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
