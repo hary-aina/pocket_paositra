@@ -83,7 +83,6 @@ public class homeFragment extends Fragment implements NetworkChangeReceiver.OnNe
             lost_connexion.setVisibility(View.VISIBLE);
             actualiserBtn.setEnabled(false);
             actualiserBtn.setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
-            solde.setText("solde inconnu");
             transfertActivity.setEnabled(false);
             transfertActivity.setImageTintList(ContextCompat.getColorStateList(getContext(), R.color.neutral));
         }
