@@ -217,7 +217,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="15dp"
-                    android:layout_marginBottom="5dp">
+                    android:layout_marginBottom="15dp">
 
                     <ImageButton
                         android:id="@+id/compteActivity"
@@ -238,13 +238,6 @@
                         android:src="@drawable/transfert"
                         app:tint="@color/black"
                         android:background="@drawable/button_border"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="15dp">
 
                     <ImageButton
                         android:id="@+id/paiementActivity"
